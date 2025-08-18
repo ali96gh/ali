@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المفصولين من العمل</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">نظام إدارة المفصولين من العمل</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>إدخال بيانات جديد</h2>
+            </div>
+            <div class="card-body">
+                <form id="dataForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">الاسم الثلاثي</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="motherName" class="form-label">اسم الأم</label>
+                                <input type="text" class="form-control" id="motherName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="education" class="form-label">التحصيل العلمي</label>
+                                <select class="form-select" id="education" required>
+                                    <option value="">اختر التحصيل العلمي</option>
+                                    <option value="أمي">أمي</option>
+                                    <option value="جامعة الثانوية">جامعة الثانوية</option>
+                                    <option value="معهد متوسط">معهد متوسط</option>
+                                    <option value="جامعي 4 سنوات">جامعي 4 سنوات</option>
+                                    <option value="ماجستير">ماجستير</option>
+                                    <option value="قيادة وكثابة">قيادة وكثابة</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reviewPlace" class="form-label">مكان المراجعة (المعاملة)</label>
+                                <input type="text" class="form-control" id="reviewPlace" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="department" class="form-label">مكان المراجعة بالتخصص</label>
+                                <input type="text" class="form-control" id="department" value="مديرية الأوقاف" required>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="recordId">
+                    <button type="submit" class="btn btn-primary">حفظ البيانات</button>
+                    <button type="button" class="btn btn-secondary" id="cancelEdit" style="display:none;">إلغاء التعديل</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>قائمة المفصولين</h2>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <button id="printBtn" class="btn btn-success">طباعة القائمة</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>م</th>
+                                <th>الاسم الثلاثي</th>
+                                <th>اسم الأم</th>
+                                <th>التحصيل العلمي</th>
+                                <th>مكان المراجعة (المعاملة)</th>
+                                <th>مكان المراجعة بالتخصص</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- البيانات ستضاف هنا جافاسكريبت -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+  </html>
