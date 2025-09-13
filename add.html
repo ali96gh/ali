@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة البيانات الوظيفية</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a5f7a;
+            --secondary-color: #159895;
+            --accent-color: #002B5B;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 60px;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .main-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-top: -30px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(26, 95, 122, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-export {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-export:hover {
+            background-color: #128587;
+            border-color: #128587;
+            color: white;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            border-right: 4px solid var(--secondary-color);
+            padding-right: 1rem;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .optional-field {
+            border-right: 4px solid #6c757d;
+        }
+        
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .logo-text {
+                font-size: 1.4rem;
+            }
+            
+            .main-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo">
+                    <i class="fas fa-landmark fa-3x"></i>
+                    <div>
+                        <div class="logo-text">وزارة الشؤون الإدارية</div>
+                        <div>نظام إدارة البيانات الوظيفية</div>
+                    </div>
+                </div>
+                <div>
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> الرئيسية</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> تسجيل الدخول</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="main-container">
+            <h2 class="text-center mb-4" style="color: var(--primary-color);">نموذج إدخال البيانات الوظيفية</h2>
+            
+            <form id="dataForm">
+                <!-- Personal Information Section -->
+                <h4 class="section-title">المعلومات الشخصية</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label for="fullName" class="form-label">الاسم الثلاثي</label>
+                        <input type="text" class="form-control" id="fullName" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="motherName" class="form-label">اسم الأم</label>
+                        <input type="text" class="form-control" id="motherName" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="nationalId" class="form-label">الرقم الوطني</label>
+                        <input type="text" class="form-control" id="nationalId" required>
+                    </div>
+                </div>
+
+                <!-- Educational Information Section -->
+                <h4 class="section-title">المعلومات التعليمية</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label for="educationLevel" class="form-label">الشهادة العلمية</label>
+                        <select class="form-select" id="educationLevel" required>
+                            <option value="" selected disabled>اختر الشهادة العلمية</option>
+                            <option value="ابتدائية">ابتدائية</option>
+                            <option value="إعدادية">إعدادية</option>
+                            <option value="ثانوية">ثانوية</option>
+                            <option value="دبلوم">دبلوم</option>
+                            <option value="بكالوريوس">بكالوريوس</option>
+                            <option value="ماجستير">ماجستير</option>
+                            <option value="دكتوراه">دكتوراه</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="degreeField" class="form-label optional-field">إجازة في (اختياري)</label>
+                        <select class="form-select" id="degreeField">
+                            <option value="" selected>اختر التخصص (إن وجد)</option>
+                            <option value="الآداب">الآداب</option>
+                            <option value="الحقوق">الحقوق</option>
+                            <option value="الطب">الطب</option>
+                            <option value="التربية">التربية</option>
+                            <option value="الهندسة">الهندسة</option>
+                            <option value="الإعلام">الإعلام</option>
+                            <option value="العلوم">العلوم</option>
+                            <option value="أخرى">غير ذلك</option>
+                        </select>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="otherCertificates" class="form-label">هل هناك شهادات أخرى؟</label>
+                        <textarea class="form-control" id="otherCertificates" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- Job Information Section -->
+                <h4 class="section-title">المعلومات الوظيفية</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <label for="initialJobTitle" class="form-label">المسمى الوظيفي المعين على أساسه</label>
+                        <input type="text" class="form-control" id="initialJobTitle" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="currentJobTitle" class="form-label">المسمى الوظيفي الحالي</label>
+                        <input type="text" class="form-control" id="currentJobTitle" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="firstAppointmentDate" class="form-label">تاريخ التعيين الأول في الدولة</label>
+                        <input type="date" class="form-control" id="firstAppointmentDate" required>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="reset" class="btn btn-secondary">
+                        <i class="fas fa-redo-alt me-2"></i> إعادة تعيين
+                    </button>
+                    <div>
+                        <button type="button" id="exportExcel" class="btn btn-export me-2">
+                            <i class="fas fa-file-excel me-2"></i> تصدير إكسل
+                        </button>
+                        <button type="button" id="exportPdf" class="btn btn-export me-2">
+                            <i class="fas fa-file-pdf me-2"></i> تصدير PDF
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> حفظ البيانات
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>وزارة الشؤون الإدارية</h5>
+                    <p>نهدف إلى تحسين وتطوير الأداء الوظيفي في القطاع العام من خلال أنظمة إلكترونية متطورة.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>روابط سريعة</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">الرئيسية</a></li>
+                        <li><a href="#" class="text-white">عن النظام</a></li>
+                        <li><a href="#" class="text-white">الأسئلة الشائعة</a></li>
+                        <li><a href="#" class="text-white">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>معلومات التواصل</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-phone me-2"></i> 011-1234567</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@mofa.gov.sy</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i> دمشق، سوريا</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <p class="text-center mb-0">© 2023 وزارة الشؤون الإدارية. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('dataForm');
+            const exportExcelBtn = document.getElementById('exportExcel');
+            const exportPdfBtn = document.getElementById('exportPdf');
+            
+            // Handle form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Basic validation
+                const requiredFields = form.querySelectorAll('[required]');
+                let valid = true;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        valid = false;
+                        field.classList.add('is-invalid');
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+                
+                if (valid) {
+                    // In a real application, you would send data to server here
+                    alert('تم حفظ البيانات بنجاح!');
+                    // form.reset();
+                } else {
+                    alert('يرجى ملء جميع الحقول الإلزامية');
+                }
+            });
+            
+            // Export to Excel functionality
+            exportExcelBtn.addEventListener('click', function() {
+                // Collect form data
+                const formData = {
+                    'الاسم الثلاثي': document.getElementById('fullName').value,
+                    'اسم الأم': document.getElementById('motherName').value,
+                    'الرقم الوطني': document.getElementById('nationalId').value,
+                    'الشهادة العلمية': document.getElementById('educationLevel').value,
+                    'التخصص': document.getElementById('degreeField').value,
+                    'شهادات أخرى': document.getElementById('otherCertificates').value,
+                    'المسمى الوظيفي الأول': document.getElementById('initialJobTitle').value,
+                    'المسمى الوظيفي الحالي': document.getElementById('currentJobTitle').value,
+                    'تاريخ التعيين الأول': document.getElementById('firstAppointmentDate').value
+                };
+                
+                // Convert to worksheet
+                const ws = XLSX.utils.json_to_sheet([formData]);
+                
+                // Create workbook
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "البيانات الوظيفية");
+                
+                // Export to file
+                XLSX.writeFile(wb, "البيانات_الوظيفية.xlsx");
+            });
+            
+            // Export to PDF functionality
+            exportPdfBtn.addEventListener('click', function() {
+                // In a real application, use jsPDF for generating PDF
+                alert('سيتم تصدير البيانات إلى PDF. في التطبيق الحقيقي، سيتم إنشاء ملف PDF باستخدام مكتبة jsPDF.');
+            });
+        });
+    </script>
+</body>
+</html>
